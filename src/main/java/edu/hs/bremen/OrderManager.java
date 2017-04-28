@@ -1,12 +1,15 @@
 package edu.hs.bremen;
 
 import edu.hs.bremen.model.Order;
+import edu.hs.bremen.model.User;
 import edu.hs.bremen.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+@Service
 public class OrderManager {
     private OrderRepository<Order, Long> orderRepository;
     private Map<String, Order> orderMap;
@@ -16,15 +19,24 @@ public class OrderManager {
         this.orderRepository = orderRepository;
     }
 
-    public void addOrder(Order order) {
+    private Order createNewOrder(User user) {
+        return new Order.OrderBuilder()
+                .withUser(user)
+                .withNewProductList()
+                .build();
+    }
+
+    public void saveOrder(Order order) {
         orderRepository.save(order);
     }
 
-    public List<Order> findAllOrders(String userUID) {
-        return null;
+    public Order findOrder(User user) {
+        return Optional.ofNullable(orderRepository.findByUser(user))
+                .orElse(createNewOrder(user));
     }
 
-    public Boolean deleteOrder(String userUID, Order order) {
+    public Boolean deleteOrder(Order order) {
+        orderRepository.delete(order);
         return Boolean.FALSE;
     }
 }
