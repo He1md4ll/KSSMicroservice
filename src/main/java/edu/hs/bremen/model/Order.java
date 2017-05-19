@@ -2,11 +2,23 @@ package edu.hs.bremen.model;
 
 import com.google.common.collect.Lists;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Entity
 public class Order {
 
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @NotNull
+    @ManyToOne(cascade = CascadeType.ALL)
     private User user;
+    
+    @NotNull
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Product> productList;
 
     private Order(){}

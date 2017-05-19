@@ -1,7 +1,5 @@
-package edu.hs.bremen.repository;
+package edu.hs.bremen;
 
-
-import edu.hs.bremen.OrderManager;
 import edu.hs.bremen.model.Order;
 import edu.hs.bremen.model.Product;
 import edu.hs.bremen.model.User;
@@ -20,10 +18,11 @@ public class ProductManager {
         this.orderManager = orderManager;
     }
 
-    public void addProductToOrder(User user, Product product) {
+    public Order addProductToOrder(User user, Product product) {
         final Order order = orderManager.findOrder(user);
         order.addProduct(product);
         orderManager.saveOrder(order);
+        return order;
     }
 
     public List<Product> getProductsForOrder(User user) {
