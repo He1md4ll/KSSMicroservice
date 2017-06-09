@@ -1,7 +1,7 @@
 package edu.hs.bremen.model.dto;
 
 import com.google.common.collect.Lists;
-import edu.hs.bremen.model.Order;
+import edu.hs.bremen.model.OrderEntity;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ public class OrderDto {
         this.productList = productList;
     }
 
-    public static OrderDto fromOrder(Order order) {
-        final List<ProductDto> productList = Lists.transform(order.getProductList(), ProductDto::fromProduct);
+    public static OrderDto fromOrder(OrderEntity orderEntity) {
+        final List<ProductDto> productList = Lists.transform(orderEntity.getProductEntityList(), ProductDto::fromProduct);
         return new OrderDto(productList);
     }
 

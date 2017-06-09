@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue
@@ -20,7 +20,7 @@ public class User {
     @Column(unique = true)
     private String uuid;
 
-    private User() {}
+    private UserEntity() {}
 
     public String getUuid() {
         return uuid;
@@ -31,15 +31,15 @@ public class User {
     }
 
     public static class UserBuilder {
-        private User user = new User();
+        private UserEntity userEntity = new UserEntity();
 
         public UserBuilder withUuid(String uuid) {
-            user.setUuid(uuid);
+            userEntity.setUuid(uuid);
             return this;
         }
 
-        public User build() {
-            return user;
+        public UserEntity build() {
+            return userEntity;
         }
     }
 }

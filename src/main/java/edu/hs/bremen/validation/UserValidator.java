@@ -7,6 +7,7 @@ import javax.validation.ValidationException;
 public class UserValidator {
 
     public static Boolean validateUserId(String userId) {
+        // TODO: ADD Validation Mock
         if (!Strings.isNullOrEmpty(userId)) {
             return Boolean.TRUE;
         } else {

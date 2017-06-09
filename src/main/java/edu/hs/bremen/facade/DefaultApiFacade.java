@@ -3,12 +3,11 @@ package edu.hs.bremen.facade;
 import edu.hs.bremen.manager.OrderManager;
 import edu.hs.bremen.manager.ProductManager;
 import edu.hs.bremen.manager.UserManager;
-import edu.hs.bremen.model.Order;
-import edu.hs.bremen.model.Product;
-import edu.hs.bremen.model.User;
+import edu.hs.bremen.model.OrderEntity;
+import edu.hs.bremen.model.ProductEntity;
+import edu.hs.bremen.model.UserEntity;
 import edu.hs.bremen.model.dto.OrderDto;
 import edu.hs.bremen.model.dto.ProductDto;
-import edu.hs.bremen.model.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,31 +29,31 @@ public class DefaultApiFacade implements IApiFacade {
 
     @Override
     @Transactional
-    public OrderDto linkProduct(UserDto userDto, ProductDto productDto) {
-        final User user = userManager.getUser(userDto);
-        final Product product = productManager.getProduct(productDto);
-        return OrderDto.fromOrder(productManager.addProductToOrder(user, product));
+    public OrderDto linkProduct(String userUuid, ProductDto productDto) {
+        final UserEntity userEntity = userManager.getUser(userUuid);
+        final ProductEntity productEntity = productManager.getProduct(productDto);
+        return OrderDto.fromOrder(productManager.addProductToOrder(userEntity, productEntity));
     }
 
     @Override
     @Transactional
-    public void deleteProduct(UserDto userDto, ProductDto productDto) {
-        final User user = userManager.getUser(userDto);
-        final Product product = productManager.getProduct(productDto);
-        productManager.deleteProductFromOrder(user, product);
+    public void deleteProduct(String userUuid, ProductDto productDto) {
+        final UserEntity userEntity = userManager.getUser(userUuid);
+        final ProductEntity productEntity = productManager.getProduct(productDto);
+        productManager.deleteProductFromOrder(userEntity, productEntity);
     }
 
     @Override
-    public OrderDto getOrder(UserDto userDto) {
-        final User user = userManager.getUser(userDto);
-        return OrderDto.fromOrder(orderManager.getOrder(user));
+    public OrderDto getOrder(String userUuid) {
+        final UserEntity userEntity = userManager.getUser(userUuid);
+        return OrderDto.fromOrder(orderManager.getOrder(userEntity));
     }
 
     @Override
     @Transactional
-    public void deleteOrder(UserDto userDto) {
-        final User user = userManager.getUser(userDto);
-        final Order order = orderManager.getOrder(user);
-        orderManager.deleteOrder(order);
+    public void deleteOrder(String userUuid) {
+        final UserEntity userEntity = userManager.getUser(userUuid);
+        final OrderEntity orderEntity = orderManager.getOrder(userEntity);
+        orderManager.deleteOrder(orderEntity);
     }
 }

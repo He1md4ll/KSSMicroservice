@@ -1,7 +1,6 @@
 package edu.hs.bremen.manager;
 
-import edu.hs.bremen.model.User;
-import edu.hs.bremen.model.dto.UserDto;
+import edu.hs.bremen.model.UserEntity;
 import edu.hs.bremen.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +17,15 @@ public class UserManager {
         this.userRepository = userRepository;
     }
 
-    public User getUser(final UserDto userDto) {
+    public UserEntity getUser(final String userUuid) {
         return Optional.ofNullable(userRepository
-                .findUserByUuid(userDto.getUserUuid()))
-                .orElse(createNewUser(userDto));
+                .findByUuid(userUuid))
+                .orElseGet(() -> createNewUser(userUuid));
     }
 
-    private User createNewUser(UserDto userDto) {
-        final User user = new User.UserBuilder().withUuid(userDto.getUserUuid()).build();
-        userRepository.save(user);
-        return user;
+    private UserEntity createNewUser(String userUuid) {
+        final UserEntity userEntity = new UserEntity.UserBuilder().withUuid(userUuid).build();
+        userRepository.save(userEntity);
+        return userEntity;
     }
 }

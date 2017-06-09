@@ -1,7 +1,7 @@
 package edu.hs.bremen.manager;
 
-import edu.hs.bremen.model.Order;
-import edu.hs.bremen.model.User;
+import edu.hs.bremen.model.OrderEntity;
+import edu.hs.bremen.model.UserEntity;
 import edu.hs.bremen.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,25 +18,25 @@ public class OrderManager {
         this.orderRepository = orderRepository;
     }
 
-    private Order createNewOrder(User user) {
-        final Order order = new Order.OrderBuilder()
+    private OrderEntity createNewOrder(UserEntity user) {
+        final OrderEntity orderEntity = new OrderEntity.OrderBuilder()
                 .withUser(user)
                 .withNewProductList()
                 .build();
-        orderRepository.save(order);
-        return order;
+        orderRepository.save(orderEntity);
+        return orderEntity;
     }
 
-    public void saveOrder(Order order) {
-        orderRepository.save(order);
+    public void saveOrder(OrderEntity orderEntity) {
+        orderRepository.save(orderEntity);
     }
 
-    public Order getOrder(User user) {
-        return Optional.ofNullable(orderRepository.findByUser(user))
-                .orElse(createNewOrder(user));
+    public OrderEntity getOrder(final UserEntity userEntity) {
+        return Optional.ofNullable(orderRepository.findFirstByUserEntity(userEntity))
+                .orElseGet(() -> createNewOrder(userEntity));
     }
 
-    public void deleteOrder(Order order) {
-        orderRepository.delete(order);
+    public void deleteOrder(OrderEntity orderEntity) {
+        orderRepository.delete(orderEntity);
     }
 }
