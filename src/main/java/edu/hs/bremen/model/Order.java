@@ -35,6 +35,10 @@ public class Order {
         productList.add(product);
     }
 
+    public Boolean deleteProduct(Product product) {
+        return productList.remove(product);
+    }
+
     private void setUser(User user) {
         this.user = user;
     }

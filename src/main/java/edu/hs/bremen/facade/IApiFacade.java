@@ -2,11 +2,11 @@ package edu.hs.bremen.facade;
 
 import edu.hs.bremen.model.dto.OrderDto;
 import edu.hs.bremen.model.dto.ProductDto;
+import edu.hs.bremen.model.dto.UserDto;
 
 public interface IApiFacade {
-    OrderDto linkProduct(String userId, ProductDto productDto);
-    Boolean deleteProduct(String userId, ProductDto productDto);
-    OrderDto findOrder(String userId);
-    Boolean deleteOrder(String userId);
-    OrderDto createOrder(String userId);
+    OrderDto linkProduct(UserDto userDto, ProductDto productDto);
+    void deleteProduct(UserDto userDto, ProductDto productDto);
+    OrderDto getOrder(UserDto userDto);
+    void deleteOrder(UserDto userDto);
 }

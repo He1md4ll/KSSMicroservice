@@ -1,4 +1,4 @@
-package edu.hs.bremen;
+package edu.hs.bremen.manager;
 
 import edu.hs.bremen.model.Order;
 import edu.hs.bremen.model.User;
@@ -10,31 +10,33 @@ import java.util.Optional;
 
 @Service
 public class OrderManager {
-    private OrderRepository<Order, Long> orderRepository;
+
+    private OrderRepository orderRepository;
 
     @Autowired
-    public OrderManager(OrderRepository<Order, Long> orderRepository) {
+    public OrderManager(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
     private Order createNewOrder(User user) {
-        return new Order.OrderBuilder()
+        final Order order = new Order.OrderBuilder()
                 .withUser(user)
                 .withNewProductList()
                 .build();
+        orderRepository.save(order);
+        return order;
     }
 
     public void saveOrder(Order order) {
         orderRepository.save(order);
     }
 
-    public Order findOrder(User user) {
+    public Order getOrder(User user) {
         return Optional.ofNullable(orderRepository.findByUser(user))
                 .orElse(createNewOrder(user));
     }
 
-    public Boolean deleteOrder(Order order) {
+    public void deleteOrder(Order order) {
         orderRepository.delete(order);
-        return Boolean.FALSE;
     }
 }
