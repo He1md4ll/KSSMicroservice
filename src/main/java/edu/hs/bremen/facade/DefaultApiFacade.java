@@ -31,7 +31,7 @@ public class DefaultApiFacade implements IApiFacade {
     @Transactional
     public OrderDto linkProduct(String userUuid, ProductDto productDto) {
         final UserEntity userEntity = userManager.getUser(userUuid);
-        final ProductEntity productEntity = productManager.getProduct(productDto);
+        final ProductEntity productEntity = productManager.getUpdatedProduct(productDto, Boolean.FALSE);
         return OrderDto.fromOrder(productManager.addProductToOrder(userEntity, productEntity));
     }
 
@@ -39,8 +39,10 @@ public class DefaultApiFacade implements IApiFacade {
     @Transactional
     public void deleteProduct(String userUuid, ProductDto productDto) {
         final UserEntity userEntity = userManager.getUser(userUuid);
-        final ProductEntity productEntity = productManager.getProduct(productDto);
-        productManager.deleteProductFromOrder(userEntity, productEntity);
+        final ProductEntity productEntity = productManager.getUpdatedProduct(productDto, Boolean.TRUE);
+        if (productEntity.getProductCount() <= 0) {
+            productManager.deleteProductFromOrder(userEntity, productEntity);
+        }
     }
 
     @Override
