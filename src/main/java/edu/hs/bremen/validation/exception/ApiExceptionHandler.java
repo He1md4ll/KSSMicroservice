@@ -1,6 +1,8 @@
 package edu.hs.bremen.validation.exception;
 
 import edu.hs.bremen.model.dto.ErrorDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +18,8 @@ import java.util.List;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiExceptionHandler.class.getSimpleName());
+
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public @ResponseBody ErrorDto handleException(ValidationException e) {
@@ -26,17 +30,6 @@ public class ApiExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public @ResponseBody ErrorDto handleException(MethodArgumentNotValidException e) {
         return new ErrorDto("ERROR_VALIDATION_FAILED", proccessValidationException(e.getBindingResult().getFieldErrors()));
-    }
-
-    private String proccessValidationException(List<FieldError> fieldErrorList) {
-        StringBuilder builder = new StringBuilder("Validation Error: ");
-        for (FieldError fieldError : fieldErrorList) {
-            builder.append("\n")
-                    .append(fieldError.getField())
-                    .append(" - ")
-                    .append(fieldError.getDefaultMessage());
-        }
-        return builder.toString();
     }
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -54,6 +47,18 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
     public @ResponseBody ErrorDto handleException(RuntimeException e) {
+        LOGGER.warn("Unexpected error occurred.", e);
         return new ErrorDto("ERROR_UNKNOWN", "Unexpected error occurred: Please contact system administrator.");
+    }
+
+    private String proccessValidationException(List<FieldError> fieldErrorList) {
+        StringBuilder builder = new StringBuilder("Validation Error: ");
+        for (FieldError fieldError : fieldErrorList) {
+            builder.append("\n")
+                    .append(fieldError.getField())
+                    .append(" - ")
+                    .append(fieldError.getDefaultMessage());
+        }
+        return builder.toString();
     }
 }
