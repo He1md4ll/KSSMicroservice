@@ -18,11 +18,8 @@ public class ProductEntity {
     @Column(unique = true)
     private String productID;
 
-    @NotNull
-    private Integer productCount;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<OrderEntity> orderEntityList;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<BasketEntryEntity> basketEntryEntityList;
 
     private ProductEntity() {}
 
@@ -34,21 +31,12 @@ public class ProductEntity {
         this.productID = productID;
     }
 
-    public Integer getProductCount() {
-        return productCount;
+    public List<BasketEntryEntity> getBasketEntryEntityList() {
+        return basketEntryEntityList;
     }
 
-    public void setProductCount(Integer productCount) {
-        this.productCount = productCount;
-    }
-
-    public List<OrderEntity> getOrderEntityList() {
-
-        return orderEntityList;
-    }
-
-    public void setOrderEntityList(List<OrderEntity> orderEntityList) {
-        this.orderEntityList = orderEntityList;
+    public void setBasketEntryEntityList(List<BasketEntryEntity> basketEntryEntityList) {
+        this.basketEntryEntityList = basketEntryEntityList;
     }
 
     public static class ProductBuilder {
@@ -56,11 +44,6 @@ public class ProductEntity {
 
         public ProductBuilder withProductID(String produtID) {
             productEntity.setProductID(produtID);
-            return this;
-        }
-
-        public ProductBuilder withCount(Integer count) {
-            productEntity.setProductCount(count);
             return this;
         }
 

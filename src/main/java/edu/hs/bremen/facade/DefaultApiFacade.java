@@ -1,11 +1,14 @@
 package edu.hs.bremen.facade;
 
+import edu.hs.bremen.manager.BasketManager;
 import edu.hs.bremen.manager.OrderManager;
 import edu.hs.bremen.manager.ProductManager;
 import edu.hs.bremen.manager.UserManager;
+import edu.hs.bremen.model.BasketEntryEntity;
 import edu.hs.bremen.model.OrderEntity;
 import edu.hs.bremen.model.ProductEntity;
 import edu.hs.bremen.model.UserEntity;
+import edu.hs.bremen.model.dto.BasketEntryDto;
 import edu.hs.bremen.model.dto.OrderDto;
 import edu.hs.bremen.model.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +19,14 @@ import javax.transaction.Transactional;
 @Component
 public class DefaultApiFacade implements IApiFacade {
 
+    private BasketManager basketManager;
     private ProductManager productManager;
     private OrderManager orderManager;
     private UserManager userManager;
 
     @Autowired
-    public DefaultApiFacade(ProductManager productManager, OrderManager orderManager, UserManager userManager) {
+    public DefaultApiFacade(BasketManager basketManager, ProductManager productManager, OrderManager orderManager, UserManager userManager) {
+        this.basketManager = basketManager;
         this.productManager = productManager;
         this.orderManager = orderManager;
         this.userManager = userManager;
@@ -29,20 +34,21 @@ public class DefaultApiFacade implements IApiFacade {
 
     @Override
     @Transactional
-    public OrderDto linkProduct(String userUuid, ProductDto productDto) {
+    public OrderDto linkBasketEntry(String userUuid, BasketEntryDto basketEntryDto) {
         final UserEntity userEntity = userManager.getUser(userUuid);
-        final ProductEntity productEntity = productManager.getUpdatedProduct(productDto, Boolean.FALSE);
-        return OrderDto.fromOrder(productManager.addProductToOrder(userEntity, productEntity));
+        final BasketEntryEntity basketEntryEntity = basketManager.getUpdatedBasketEntry(basketEntryDto, Boolean.FALSE);
+        return OrderDto.fromOrder(basketManager.addBasketEntryToOrder(userEntity, basketEntryEntity));
     }
 
     @Override
     @Transactional
-    public void deleteProduct(String userUuid, ProductDto productDto) {
+    public OrderDto deleteBasketEntry(String userUuid, BasketEntryDto basketEntryDto) {
         final UserEntity userEntity = userManager.getUser(userUuid);
-        final ProductEntity productEntity = productManager.getUpdatedProduct(productDto, Boolean.TRUE);
-        if (productEntity.getProductCount() <= 0) {
-            productManager.deleteProductFromOrder(userEntity, productEntity);
+        final BasketEntryEntity basketEntryEntity = basketManager.getUpdatedBasketEntry(basketEntryDto, Boolean.TRUE);
+        if (basketEntryEntity.getProductCount() <= 0) {
+            basketManager.deleteBasketEntryFromOrder(userEntity, basketEntryEntity);
         }
+        return OrderDto.fromOrder(orderManager.getOrder(userEntity));
     }
 
     @Override
@@ -57,5 +63,16 @@ public class DefaultApiFacade implements IApiFacade {
         final UserEntity userEntity = userManager.getUser(userUuid);
         final OrderEntity orderEntity = orderManager.getOrder(userEntity);
         orderManager.deleteOrder(orderEntity);
+    }
+
+    @Override
+    public ProductDto getProduct(String productId) {
+        return ProductDto.fromProduct(productManager.getProduct(productId));
+    }
+
+    @Override
+    public void deleteProduct(String productId) {
+        final ProductEntity productEntity = productManager.getProduct(productId);
+        productManager.deleteProduct(productEntity);
     }
 }

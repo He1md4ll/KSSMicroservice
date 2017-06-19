@@ -16,27 +16,26 @@ public class OrderEntity {
     @NotNull
     @ManyToOne(cascade = CascadeType.MERGE)
     private UserEntity userEntity;
-    
-    @NotNull
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<ProductEntity> productEntityList;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<BasketEntryEntity> basketEntryEntityList;
 
     private OrderEntity(){}
 
-    public List<ProductEntity> getProductEntityList() {
-        return productEntityList;
+    public List<BasketEntryEntity> getBasketEntryEntityList() {
+        return basketEntryEntityList;
     }
 
-    private void setProductEntityList(List<ProductEntity> productEntityList) {
-        this.productEntityList = productEntityList;
+    private void setBasketEntryEntityList(List<BasketEntryEntity> basketEntryEntityList) {
+        this.basketEntryEntityList = basketEntryEntityList;
     }
 
-    public void addProduct(ProductEntity productEntity) {
-        productEntityList.add(productEntity);
+    public void addBasketEntry(BasketEntryEntity basketEntryEntity) {
+        basketEntryEntityList.add(basketEntryEntity);
     }
 
-    public Boolean deleteProduct(ProductEntity productEntity) {
-        return productEntityList.remove(productEntity);
+    public Boolean deleteBasketEntry(BasketEntryEntity basketEntryEntity) {
+        return basketEntryEntityList.remove(basketEntryEntity);
     }
 
     private void setUserEntity(UserEntity userEntity) {
@@ -51,13 +50,13 @@ public class OrderEntity {
             return this;
         }
 
-        public OrderBuilder withProductList(List<ProductEntity> productEntityList) {
-            orderEntity.setProductEntityList(productEntityList);
+        public OrderBuilder withBasketEntryList(List<BasketEntryEntity> basketEntryEntityList) {
+            orderEntity.setBasketEntryEntityList(basketEntryEntityList);
             return this;
         }
 
-        public OrderBuilder withNewProductList() {
-            orderEntity.setProductEntityList(Lists.newArrayList());
+        public OrderBuilder withNewBasketEntryList() {
+            orderEntity.setBasketEntryEntityList(Lists.newArrayList());
             return this;
         }
 

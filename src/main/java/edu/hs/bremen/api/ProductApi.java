@@ -1,15 +1,11 @@
 package edu.hs.bremen.api;
 
 import edu.hs.bremen.facade.IApiFacade;
-import edu.hs.bremen.model.dto.OrderDto;
 import edu.hs.bremen.model.dto.ProductDto;
-import edu.hs.bremen.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -23,19 +19,15 @@ public class ProductApi {
         this.apiFacade = apiFacade;
     }
 
-    @RequestMapping(path = "/", method = RequestMethod.PUT)
-    public ResponseEntity addProductToOrder(@RequestParam("user") String userUuid,
-                                            @RequestBody @Valid ProductDto productDto) {
-        UserValidator.validateUserId(userUuid);
-        final OrderDto orderDto = apiFacade.linkProduct(userUuid, productDto);
-        return ResponseEntity.ok(orderDto);
+    @RequestMapping(path = "/", method = RequestMethod.GET)
+    public ResponseEntity getProduct(@RequestParam("productId") String productId) {
+        final ProductDto productDtoResult = apiFacade.getProduct(productId);
+        return ResponseEntity.ok(productDtoResult);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.DELETE)
-    public ResponseEntity deleteProductOfOrder(@RequestParam("user") String userUuid,
-                                               @RequestBody @Valid ProductDto productDto) {
-        UserValidator.validateUserId(userUuid);
-        apiFacade.deleteProduct(userUuid, productDto);
+    public ResponseEntity deleteProduct(@RequestParam("productId") String productId) {
+        apiFacade.deleteProduct(productId);
         return ResponseEntity.ok().build();
     }
 }

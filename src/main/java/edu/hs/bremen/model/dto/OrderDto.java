@@ -6,18 +6,19 @@ import edu.hs.bremen.model.OrderEntity;
 import java.util.List;
 
 public class OrderDto {
-    private List<ProductDto> productList;
 
-    public OrderDto(List<ProductDto> productList) {
-        this.productList = productList;
+    private List<BasketEntryDto> basketEntryDtoList;
+
+    public OrderDto(List<BasketEntryDto> basketEntryDtoList) {
+        this.basketEntryDtoList = basketEntryDtoList;
     }
 
     public static OrderDto fromOrder(OrderEntity orderEntity) {
-        final List<ProductDto> productList = Lists.transform(orderEntity.getProductEntityList(), ProductDto::fromProduct);
-        return new OrderDto(productList);
+        final List<BasketEntryDto> basketEntryDtoList = Lists.transform(orderEntity.getBasketEntryEntityList(), BasketEntryDto::fromBasketEntry);
+        return new OrderDto(basketEntryDtoList);
     }
 
-    public List<ProductDto> getProductList() {
-        return productList;
+    public List<BasketEntryDto> getBasketEntryDtoList() {
+        return basketEntryDtoList;
     }
 }

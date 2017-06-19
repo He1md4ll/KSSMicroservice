@@ -44,6 +44,12 @@ public class ApiExceptionHandler {
         return new ErrorDto("ERROR_PRODUCT_LINK", e.getMessage());
     }
 
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ProductNotValidException.class)
+    public @ResponseBody ErrorDto handleException(ProductNotValidException e) {
+        return new ErrorDto("ERROR_PRODUCT_INVALID", e.getMessage());
+    }
+
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
     public @ResponseBody ErrorDto handleException(RuntimeException e) {

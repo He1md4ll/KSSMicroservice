@@ -21,7 +21,7 @@ public class OrderManager {
     private OrderEntity createNewOrder(UserEntity user) {
         final OrderEntity orderEntity = new OrderEntity.OrderBuilder()
                 .withUser(user)
-                .withNewProductList()
+                .withNewBasketEntryList()
                 .build();
         orderRepository.save(orderEntity);
         return orderEntity;
