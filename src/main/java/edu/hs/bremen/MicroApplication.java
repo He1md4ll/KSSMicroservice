@@ -16,7 +16,7 @@ public class MicroApplication {
 	}
 
 	@Bean
-	private void initProducts(ProductRepository productRepository,
+	public String initProducts(ProductRepository productRepository,
 							  IProductMicroserviceMock productMicroserviceMock) {
 	    // TODO: Add validator for product
         // Initialize products
@@ -26,5 +26,6 @@ public class MicroApplication {
 					.build();
 			productRepository.save(productEntity);
 		}
+		return null;
 	}
 }
