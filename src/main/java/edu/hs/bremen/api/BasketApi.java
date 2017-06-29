@@ -3,10 +3,13 @@ package edu.hs.bremen.api;
 import edu.hs.bremen.facade.IApiFacade;
 import edu.hs.bremen.model.dto.BasketEntryDto;
 import edu.hs.bremen.model.dto.OrderDto;
+import edu.hs.bremen.validation.BasketValidator;
 import edu.hs.bremen.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,10 +20,17 @@ import javax.validation.Valid;
 public class BasketApi {
 
     private IApiFacade apiFacade;
+    private Validator productValidator;
 
     @Autowired
-    public BasketApi(IApiFacade apiFacade) {
+    public BasketApi(IApiFacade apiFacade, BasketValidator basketValidator) {
         this.apiFacade = apiFacade;
+        this.productValidator = basketValidator;
+    }
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(productValidator);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.PUT)
