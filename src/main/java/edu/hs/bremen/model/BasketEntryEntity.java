@@ -16,6 +16,10 @@ public class BasketEntryEntity {
     private ProductEntity productEntity;
 
     @NotNull
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private OrderEntity orderEntity;
+
+    @NotNull
     @Max(10)
     private Integer productCount;
 
@@ -28,6 +32,14 @@ public class BasketEntryEntity {
 
     public void setProductEntity(ProductEntity productEntity) {
         this.productEntity = productEntity;
+    }
+
+    public OrderEntity getOrderEntity() {
+        return orderEntity;
+    }
+
+    public void setOrderEntity(OrderEntity orderEntity) {
+        this.orderEntity = orderEntity;
     }
 
     public Integer getProductCount() {
@@ -43,6 +55,11 @@ public class BasketEntryEntity {
 
         public BasketEntryEntityBuilder withProductEntity(ProductEntity productEntity) {
             basketEntryEntity.setProductEntity(productEntity);
+            return this;
+        }
+
+        public BasketEntryEntityBuilder withOrderEntity(OrderEntity orderEntity) {
+            basketEntryEntity.setOrderEntity(orderEntity);
             return this;
         }
 

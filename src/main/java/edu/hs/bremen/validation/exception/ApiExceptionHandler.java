@@ -4,6 +4,7 @@ import edu.hs.bremen.model.dto.ErrorDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,9 +12,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
@@ -50,6 +54,24 @@ public class ApiExceptionHandler {
         return new ErrorDto("ERROR_PRODUCT_INVALID", e.getMessage());
     }
 
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public @ResponseBody ErrorDto handleException(ConstraintViolationException e) {
+        return new ErrorDto("ERROR_VALIDATION_FAILED", proccessValidationException(e.getConstraintViolations()));
+    }
+
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(TransactionSystemException.class)
+    public @ResponseBody ErrorDto handleException(TransactionSystemException e) {
+        Throwable rootCause = e.getRootCause();
+        if (rootCause instanceof ConstraintViolationException) {
+            return handleException((ConstraintViolationException) rootCause);
+        } else {
+            LOGGER.warn("Error while committing transaction. Performing rollback. Message: ", e);
+            return new ErrorDto("ERROR_TRANSACTION", "Error while committing transaction. Performing rollback");
+        }
+    }
+
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
     public @ResponseBody ErrorDto handleException(RuntimeException e) {
@@ -64,6 +86,17 @@ public class ApiExceptionHandler {
                     .append(fieldError.getField())
                     .append(" - ")
                     .append(fieldError.getDefaultMessage());
+        }
+        return builder.toString();
+    }
+
+    private String proccessValidationException(Set<ConstraintViolation<?>> constraintViolationSet) {
+        StringBuilder builder = new StringBuilder("Validation Error: ");
+        for (ConstraintViolation constraintViolation : constraintViolationSet) {
+            builder.append("\n")
+                    .append(constraintViolation.getPropertyPath())
+                    .append(" - ")
+                    .append(constraintViolation.getMessage());
         }
         return builder.toString();
     }

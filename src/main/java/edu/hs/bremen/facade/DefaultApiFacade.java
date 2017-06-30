@@ -36,7 +36,7 @@ public class DefaultApiFacade implements IApiFacade {
     @Transactional
     public OrderDto linkBasketEntry(String userUuid, BasketEntryDto basketEntryDto) {
         final UserEntity userEntity = userManager.getUser(userUuid);
-        final BasketEntryEntity basketEntryEntity = basketManager.getUpdatedBasketEntry(basketEntryDto, Boolean.FALSE);
+        final BasketEntryEntity basketEntryEntity = basketManager.getUpdatedBasketEntry(userEntity, basketEntryDto, Boolean.FALSE);
         return OrderDto.fromOrder(basketManager.addBasketEntryToOrder(userEntity, basketEntryEntity));
     }
 
@@ -44,7 +44,7 @@ public class DefaultApiFacade implements IApiFacade {
     @Transactional
     public OrderDto deleteBasketEntry(String userUuid, BasketEntryDto basketEntryDto) {
         final UserEntity userEntity = userManager.getUser(userUuid);
-        final BasketEntryEntity basketEntryEntity = basketManager.getUpdatedBasketEntry(basketEntryDto, Boolean.TRUE);
+        final BasketEntryEntity basketEntryEntity = basketManager.getUpdatedBasketEntry(userEntity, basketEntryDto, Boolean.TRUE);
         if (basketEntryEntity.getProductCount() <= 0) {
             basketManager.deleteBasketEntryFromOrder(userEntity, basketEntryEntity);
         }

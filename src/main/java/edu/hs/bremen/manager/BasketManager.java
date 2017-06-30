@@ -29,15 +29,17 @@ public class BasketManager {
         this.orderManager = orderManager;
     }
 
-    public BasketEntryEntity getUpdatedBasketEntry(final BasketEntryDto basketEntryDto, boolean delete) {
+    public BasketEntryEntity getUpdatedBasketEntry(final UserEntity userEntity, final BasketEntryDto basketEntryDto, boolean delete) {
+        final OrderEntity orderEntity = orderManager.getOrder(userEntity);
         final ProductEntity productEntity = productManager.getProduct(basketEntryDto.getProductDto().getProductId());
         Optional<BasketEntryEntity> basketEntryEntityOptional = Optional.ofNullable(basketEntryRepository
-                .findByProductEntity(productEntity));
+                .findByProductEntityAndOrderEntity(productEntity, orderEntity));
 
         if (basketEntryEntityOptional.isPresent()) {
             updateBasketEntry(basketEntryEntityOptional.get(), basketEntryDto, delete);
         } else {
-            basketEntryEntityOptional = Optional.of(createNewBasketEntry(productEntity, basketEntryDto.getCount()));
+            basketEntryEntityOptional = Optional.of(createNewBasketEntry(productEntity,
+                    orderEntity, basketEntryDto.getCount()));
         }
         return basketEntryEntityOptional.get();
     }
@@ -61,15 +63,17 @@ public class BasketManager {
         Boolean deleteted = orderEntity.deleteBasketEntry(basketEntryEntity);
         if (deleteted) {
             orderManager.saveOrder(orderEntity);
+            basketEntryRepository.delete(basketEntryEntity);
             LOGGER.info("Basket entry for product {} deleted from order.", basketEntryEntity.getProductEntity().getProductID());
         } else {
             throw new ProductNotLinkedException();
         }
     }
 
-    private BasketEntryEntity createNewBasketEntry(ProductEntity productEntity, Integer count) {
+    private BasketEntryEntity createNewBasketEntry(ProductEntity productEntity, OrderEntity orderEntity, Integer count) {
         return new BasketEntryEntity.BasketEntryEntityBuilder()
                 .withProductEntity(productEntity)
+                .withOrderEntity(orderEntity)
                 .withProductCount(count)
                 .build();
     }
