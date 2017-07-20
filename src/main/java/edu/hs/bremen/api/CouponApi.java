@@ -2,6 +2,7 @@ package edu.hs.bremen.api;
 
 import edu.hs.bremen.facade.IApiFacade;
 import edu.hs.bremen.model.dto.CouponDto;
+import edu.hs.bremen.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +23,18 @@ public class CouponApi {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ResponseEntity checkCouponCode(@RequestParam("user") String userUuid,
                                           @RequestParam("code") String couponCode) {
+        UserValidator.validateUserId(userUuid);
         final CouponDto couponDto = apiFacade.verifyCoupon(userUuid, couponCode);
         if (couponDto != null) {
             return ResponseEntity.ok(couponDto);
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @RequestMapping(path = "/", method = RequestMethod.DELETE)
+    public ResponseEntity deleteCouponCode(@RequestParam("user") String userUuid) {
+        UserValidator.validateUserId(userUuid);
+        apiFacade.deleteCoupon(userUuid);
+        return ResponseEntity.ok().build();
     }
 }

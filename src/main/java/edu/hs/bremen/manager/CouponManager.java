@@ -33,6 +33,12 @@ public class CouponManager {
         return null;
     }
 
+    public void deleteCoupon(UserEntity user) {
+        final OrderEntity orderEntity = orderManager.getOrder(user);
+        orderEntity.setCouponEntity(null);
+        orderManager.saveOrder(orderEntity);
+    }
+
     private boolean checkDate(Date validFrom, Date validUntil) {
         Date now = new Date();
         return !(now.after(validFrom) && validUntil != null) || now.before(validUntil);

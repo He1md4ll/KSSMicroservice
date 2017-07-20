@@ -81,4 +81,10 @@ public class DefaultApiFacade implements IApiFacade {
         final UserEntity userEntity = userManager.getUser(userUuid);
         return CouponDto.fromCouponEntity(couponManager.verifyCoupon(userEntity, couponCode));
     }
+
+    @Override
+    public void deleteCoupon(String userUuid) {
+        final UserEntity userEntity = userManager.getUser(userUuid);
+        couponManager.deleteCoupon(userEntity);
+    }
 }
