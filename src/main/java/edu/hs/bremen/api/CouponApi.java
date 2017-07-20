@@ -20,8 +20,9 @@ public class CouponApi {
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public ResponseEntity checkCouponCode(@RequestParam String code) {
-        final CouponDto couponDto = apiFacade.verifyCoupon(code);
+    public ResponseEntity checkCouponCode(@RequestParam("user") String userUuid,
+                                          @RequestParam("code") String couponCode) {
+        final CouponDto couponDto = apiFacade.verifyCoupon(userUuid, couponCode);
         if (couponDto != null) {
             return ResponseEntity.ok(couponDto);
         }

@@ -1,7 +1,10 @@
 package edu.hs.bremen.facade;
 
 import edu.hs.bremen.manager.*;
-import edu.hs.bremen.model.*;
+import edu.hs.bremen.model.BasketEntryEntity;
+import edu.hs.bremen.model.OrderEntity;
+import edu.hs.bremen.model.ProductEntity;
+import edu.hs.bremen.model.UserEntity;
 import edu.hs.bremen.model.dto.BasketEntryDto;
 import edu.hs.bremen.model.dto.CouponDto;
 import edu.hs.bremen.model.dto.OrderDto;
@@ -74,8 +77,8 @@ public class DefaultApiFacade implements IApiFacade {
     }
 
     @Override
-    public CouponDto verifyCoupon(String couponCode) {
-        final CouponEntity couponEntity = couponManager.verifyCoupon(couponCode);
-        return couponEntity != null ? CouponDto.fromCouponEntity(couponEntity): null;
+    public CouponDto verifyCoupon(String userUuid, String couponCode) {
+        final UserEntity userEntity = userManager.getUser(userUuid);
+        return CouponDto.fromCouponEntity(couponManager.verifyCoupon(userEntity, couponCode));
     }
 }

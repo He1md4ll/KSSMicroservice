@@ -12,5 +12,5 @@ public interface IApiFacade {
     void deleteOrder(String userUuid);
     ProductDto getProduct(String productId);
     void deleteProduct(String productId);
-    CouponDto verifyCoupon(String couponCode);
+    CouponDto verifyCoupon(String userUuid, String couponCode);
 }

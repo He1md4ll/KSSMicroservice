@@ -33,8 +33,12 @@ public class CouponDto {
     }
 
     public static CouponDto fromCouponEntity(final CouponEntity couponEntity) {
-        return new CouponDto(couponEntity.getCouponCode(), couponEntity.getValidFrom(),
-                couponEntity.getValidUntil(), couponEntity.getRate());
+        if (couponEntity != null) {
+            return new CouponDto(couponEntity.getCouponCode(), couponEntity.getValidFrom(),
+                    couponEntity.getValidUntil(), couponEntity.getRate());
+        } else {
+            return null;
+        }
     }
 
     public String getCouponCode() {

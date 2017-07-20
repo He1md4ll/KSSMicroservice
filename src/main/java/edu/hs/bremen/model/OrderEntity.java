@@ -17,6 +17,9 @@ public class OrderEntity {
     @ManyToOne(cascade = CascadeType.MERGE)
     private UserEntity userEntity;
 
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private CouponEntity couponEntity;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<BasketEntryEntity> basketEntryEntityList;
 
@@ -38,8 +41,20 @@ public class OrderEntity {
         return basketEntryEntityList.remove(basketEntryEntity);
     }
 
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
     private void setUserEntity(UserEntity userEntity) {
         this.userEntity = userEntity;
+    }
+
+    public CouponEntity getCouponEntity() {
+        return couponEntity;
+    }
+
+    public void setCouponEntity(CouponEntity couponEntity) {
+        this.couponEntity = couponEntity;
     }
 
     public static class OrderBuilder {
@@ -47,6 +62,11 @@ public class OrderEntity {
 
         public OrderBuilder withUser(UserEntity userEntity) {
             orderEntity.setUserEntity(userEntity);
+            return this;
+        }
+
+        public OrderBuilder withCoupon(CouponEntity couponEntity) {
+            orderEntity.setCouponEntity(couponEntity);
             return this;
         }
 
