@@ -11,7 +11,6 @@ public class UserValidator {
     private static IUserMicroserviceMock userMicroserviceMock = new UserMicroserviceMock();
 
     public static Boolean validateUserId(String userId) {
-        // TODO: ADD Validation Mock
         if (!Strings.isNullOrEmpty(userId) && userMicroserviceMock.validateUser(userId)) {
             return Boolean.TRUE;
         } else {

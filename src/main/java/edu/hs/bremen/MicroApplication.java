@@ -18,7 +18,6 @@ public class MicroApplication {
 	@Bean
 	public String initProducts(ProductRepository productRepository,
 							  IProductMicroserviceMock productMicroserviceMock) {
-	    // TODO: Add validator for product
         // Initialize products
 		for (ProductDto productDto : productMicroserviceMock.loadAllProducts()) {
 			final ProductEntity productEntity = new ProductEntity.ProductBuilder()

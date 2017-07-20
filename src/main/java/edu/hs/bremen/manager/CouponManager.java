@@ -24,7 +24,7 @@ public class CouponManager {
 
     public CouponEntity verifyCoupon(UserEntity userEntity, String couponCode) {
         final CouponEntity couponEntity = couponRepository.findByCouponCode(couponCode);
-        if (couponEntity != null ) {
+        if (couponEntity != null && checkDate(couponEntity.getValidFrom(), couponEntity.getValidUntil())) {
             final OrderEntity orderEntity = orderManager.getOrder(userEntity);
             orderEntity.setCouponEntity(couponEntity);
             orderManager.saveOrder(orderEntity);
@@ -33,12 +33,26 @@ public class CouponManager {
         return null;
     }
 
+    private boolean checkDate(Date validFrom, Date validUntil) {
+        Date now = new Date();
+        return !(now.after(validFrom) && validUntil != null) || now.before(validUntil);
+    }
+
+    // TODO: Can be removed when admin panel for coupon codes is present
     @PostConstruct
     private void init(){
         CouponEntity couponEntity = new CouponEntity.CouponBuilder()
                 .withCouponCode("noMoney")
                 .withRate(50)
                 .withValidFrom(new Date())
+                .build();
+        couponRepository.save(couponEntity);
+
+        couponEntity = new CouponEntity.CouponBuilder()
+                .withCouponCode("expired")
+                .withRate(100)
+                .withValidFrom(new Date())
+                .withValidUntil(new Date())
                 .build();
         couponRepository.save(couponEntity);
     }
