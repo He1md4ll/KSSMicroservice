@@ -1,14 +1,9 @@
 package edu.hs.bremen.facade;
 
-import edu.hs.bremen.manager.BasketManager;
-import edu.hs.bremen.manager.OrderManager;
-import edu.hs.bremen.manager.ProductManager;
-import edu.hs.bremen.manager.UserManager;
-import edu.hs.bremen.model.BasketEntryEntity;
-import edu.hs.bremen.model.OrderEntity;
-import edu.hs.bremen.model.ProductEntity;
-import edu.hs.bremen.model.UserEntity;
+import edu.hs.bremen.manager.*;
+import edu.hs.bremen.model.*;
 import edu.hs.bremen.model.dto.BasketEntryDto;
+import edu.hs.bremen.model.dto.CouponDto;
 import edu.hs.bremen.model.dto.OrderDto;
 import edu.hs.bremen.model.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +18,15 @@ public class DefaultApiFacade implements IApiFacade {
     private ProductManager productManager;
     private OrderManager orderManager;
     private UserManager userManager;
+    private CouponManager couponManager;
 
     @Autowired
-    public DefaultApiFacade(BasketManager basketManager, ProductManager productManager, OrderManager orderManager, UserManager userManager) {
+    public DefaultApiFacade(BasketManager basketManager, ProductManager productManager, OrderManager orderManager, UserManager userManager, CouponManager couponManager) {
         this.basketManager = basketManager;
         this.productManager = productManager;
         this.orderManager = orderManager;
         this.userManager = userManager;
+        this.couponManager = couponManager;
     }
 
     @Override
@@ -74,5 +71,11 @@ public class DefaultApiFacade implements IApiFacade {
     public void deleteProduct(String productId) {
         final ProductEntity productEntity = productManager.getProduct(productId);
         productManager.deleteProduct(productEntity);
+    }
+
+    @Override
+    public CouponDto verifyCoupon(String couponCode) {
+        final CouponEntity couponEntity = couponManager.verifyCoupon(couponCode);
+        return couponEntity != null ? CouponDto.fromCouponEntity(couponEntity): null;
     }
 }
