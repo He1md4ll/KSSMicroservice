@@ -14,6 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Manager to handle all basket related operations
+ * including data manipulation and order management.
+ */
 @Service
 public class BasketManager {
 
@@ -29,6 +33,14 @@ public class BasketManager {
         this.orderManager = orderManager;
     }
 
+    /**
+     * Updates basket entry if there already is an entry for added product
+     * Otherwise new basket entry for product created
+     * @param userEntity user
+     * @param basketEntryDto basket entry to add
+     * @param delete add or subtract count
+     * @return updated basket entry
+     */
     public BasketEntryEntity getUpdatedBasketEntry(final UserEntity userEntity, final BasketEntryDto basketEntryDto, boolean delete) {
         final OrderEntity orderEntity = orderManager.getOrder(userEntity);
         final ProductEntity productEntity = productManager.getProduct(basketEntryDto.getProductDto().getProductId());
@@ -44,6 +56,12 @@ public class BasketManager {
         return basketEntryEntityOptional.orElse(null);
     }
 
+    /**
+     * Links basket entry to current order of user if not already present in order
+     * @param userEntity user
+     * @param basketEntryEntity basket entry to add
+     * @return updated order
+     */
     public OrderEntity addBasketEntryToOrder(UserEntity userEntity, BasketEntryEntity basketEntryEntity) {
         final OrderEntity orderEntity = orderManager.getOrder(userEntity);
 
@@ -58,6 +76,12 @@ public class BasketManager {
 
     }
 
+    /**
+     * Removes basket entry from current order of user
+     * If basket entry is not part of order exception is thrown (see ProductNotLinkedException)
+     * @param userEntity user
+     * @param basketEntryEntity
+     */
     public void deleteBasketEntryFromOrder(UserEntity userEntity, BasketEntryEntity basketEntryEntity) {
         final OrderEntity orderEntity = orderManager.getOrder(userEntity);
         Boolean deleteted = orderEntity.deleteBasketEntry(basketEntryEntity);
@@ -70,6 +94,13 @@ public class BasketManager {
         }
     }
 
+    /**
+     * Creates new basket entry with passed parameters
+     * @param productEntity product of basket entry
+     * @param orderEntity current order of user
+     * @param count product count
+     * @return new basket entry
+     */
     private BasketEntryEntity createNewBasketEntry(ProductEntity productEntity, OrderEntity orderEntity, Integer count) {
         return new BasketEntryEntity.BasketEntryEntityBuilder()
                 .withProductEntity(productEntity)
@@ -78,6 +109,12 @@ public class BasketManager {
                 .build();
     }
 
+    /**
+     * Updates product count of basket entry and saves changes in repo
+     * @param basketEntryEntity current basket entry
+     * @param basketEntryDto basket entry for update
+     * @param delete add or subtract?
+     */
     private void updateBasketEntry(BasketEntryEntity basketEntryEntity, BasketEntryDto basketEntryDto, boolean delete) {
         int newCount;
         if (delete) {

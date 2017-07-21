@@ -7,6 +7,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Api entry point for product
+ * Api also triggers validation of user
+ * Cross origin for separate deployment of frontend and backend
+ */
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/product", produces = MediaType.APPLICATION_JSON_VALUE)

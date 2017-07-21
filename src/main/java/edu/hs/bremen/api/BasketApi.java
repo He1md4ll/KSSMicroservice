@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * Api entry point for basket entries
+ * Api also triggers validation of user and basket entries (see @Valid)
+ * Cross origin for separate deployment of frontend and backend
+ */
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/basket", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -8,6 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Api entry point for order
+ * Api also triggers validation of user
+ * Cross origin for separate deployment of frontend and backend
+ */
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/order", produces = MediaType.APPLICATION_JSON_VALUE)
