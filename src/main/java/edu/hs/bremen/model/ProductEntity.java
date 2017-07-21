@@ -21,8 +21,6 @@ public class ProductEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<BasketEntryEntity> basketEntryEntityList;
 
-    private ProductEntity() {}
-
     public String getProductID() {
         return productID;
     }

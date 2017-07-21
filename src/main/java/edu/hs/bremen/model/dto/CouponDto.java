@@ -22,9 +22,6 @@ public class CouponDto {
     @Max(100)
     private Integer rate;
 
-    public CouponDto() {
-    }
-
     public CouponDto(String couponCode, Date validFrom, Date validUntil, Integer rate) {
         this.couponCode = couponCode;
         this.validFrom = validFrom;

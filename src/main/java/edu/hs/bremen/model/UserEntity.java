@@ -20,8 +20,6 @@ public class UserEntity {
     @Column(unique = true)
     private String uuid;
 
-    private UserEntity() {}
-
     public String getUuid() {
         return uuid;
     }

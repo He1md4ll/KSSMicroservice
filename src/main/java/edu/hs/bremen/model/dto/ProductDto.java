@@ -12,6 +12,7 @@ public class ProductDto {
     private String productId;
 
     public ProductDto() {
+        // Empty constructor for automatic marshaling from json
     }
 
     public ProductDto(String productId) {

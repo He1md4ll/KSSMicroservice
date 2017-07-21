@@ -23,9 +23,6 @@ public class BasketEntryEntity {
     @Max(10)
     private Integer productCount;
 
-    public BasketEntryEntity() {
-    }
-
     public ProductEntity getProductEntity() {
         return productEntity;
     }

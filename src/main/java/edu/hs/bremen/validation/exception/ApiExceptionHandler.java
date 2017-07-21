@@ -22,18 +22,19 @@ import java.util.Set;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
+    public static final String VALIDATION_FAILED = "ERROR_VALIDATION_FAILED";
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiExceptionHandler.class.getSimpleName());
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public @ResponseBody ErrorDto handleException(ValidationException e) {
-        return new ErrorDto("ERROR_VALIDATION_FAILED", e.getMessage());
+        return new ErrorDto(VALIDATION_FAILED, e.getMessage());
     }
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public @ResponseBody ErrorDto handleException(MethodArgumentNotValidException e) {
-        return new ErrorDto("ERROR_VALIDATION_FAILED", proccessValidationException(e.getBindingResult().getFieldErrors()));
+        return new ErrorDto(VALIDATION_FAILED, proccessValidationException(e.getBindingResult().getFieldErrors()));
     }
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -57,7 +58,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public @ResponseBody ErrorDto handleException(ConstraintViolationException e) {
-        return new ErrorDto("ERROR_VALIDATION_FAILED", proccessValidationException(e.getConstraintViolations()));
+        return new ErrorDto(VALIDATION_FAILED, proccessValidationException(e.getConstraintViolations()));
     }
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)

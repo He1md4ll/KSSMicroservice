@@ -17,6 +17,7 @@ public class BasketEntryDto {
     private Integer count;
 
     public BasketEntryDto() {
+        // Empty constructor for automatic marshaling from json
     }
 
     public BasketEntryDto(ProductDto productDto, Integer count) {

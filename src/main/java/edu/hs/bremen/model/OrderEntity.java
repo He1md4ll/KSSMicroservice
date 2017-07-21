@@ -23,8 +23,6 @@ public class OrderEntity {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<BasketEntryEntity> basketEntryEntityList;
 
-    private OrderEntity(){}
-
     public List<BasketEntryEntity> getBasketEntryEntityList() {
         return basketEntryEntityList;
     }

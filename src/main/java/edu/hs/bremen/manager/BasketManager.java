@@ -41,7 +41,7 @@ public class BasketManager {
             basketEntryEntityOptional = Optional.of(createNewBasketEntry(productEntity,
                     orderEntity, basketEntryDto.getCount()));
         }
-        return basketEntryEntityOptional.get();
+        return basketEntryEntityOptional.orElse(null);
     }
 
     public OrderEntity addBasketEntryToOrder(UserEntity userEntity, BasketEntryEntity basketEntryEntity) {

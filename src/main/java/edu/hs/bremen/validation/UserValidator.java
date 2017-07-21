@@ -10,6 +10,8 @@ public class UserValidator {
 
     private static IUserMicroserviceMock userMicroserviceMock = new UserMicroserviceMock();
 
+    private UserValidator(){}
+
     // TODO: User validation could be extracted to request interceptor
     public static Boolean validateUserId(String userId) {
         if (!Strings.isNullOrEmpty(userId) && userMicroserviceMock.validateUser(userId)) {
