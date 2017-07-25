@@ -8,6 +8,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * Validator to validate basket entries.
+ * Validator uses mocks for communication to other services for
+ * verification of product ids and product counts.
+ *
+ * Validator is called by spring validation framework.
+ */
 @Component
 public class BasketValidator implements Validator {
 

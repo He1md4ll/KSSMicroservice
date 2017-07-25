@@ -19,6 +19,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Central exception handling to avoid throwing exceptions to api users.
+ * Exceptions processed depending on its type.
+ * Validation exceptions are processed in a special way to extract meaningful message for the user.
+ */
 @ControllerAdvice
 public class ApiExceptionHandler {
 

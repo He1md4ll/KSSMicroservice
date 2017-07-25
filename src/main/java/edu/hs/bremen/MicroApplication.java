@@ -15,6 +15,12 @@ public class MicroApplication {
 		SpringApplication.run(MicroApplication.class, args);
 	}
 
+	/**
+	 * Loads all products from product micro service and saves them to product repo.
+	 * @param productRepository repository for products (injected)
+	 * @param productMicroserviceMock mock of product service (injected)
+	 * @return just needed for bean definition is Spring
+	 */
 	@Bean
 	public String initProducts(ProductRepository productRepository,
 							  IProductMicroserviceMock productMicroserviceMock) {

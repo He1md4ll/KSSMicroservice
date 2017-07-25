@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.Date;
 
+/**
+ * Manager to handle all coupon related operations
+ * including verification and initialization.
+ */
 @Service
 public class CouponManager {
 
@@ -22,6 +26,14 @@ public class CouponManager {
         this.orderManager = orderManager;
     }
 
+    /**
+     * Checks coupon code if present in database.
+     * In case the coupon exits date checks are performed to verify that it is valid.
+     * Coupon is added to current order of user. Existing coupons wil be replaced.
+     * @param userEntity user
+     * @param couponCode coupon code
+     * @return coupon or null
+     */
     public CouponEntity verifyCoupon(UserEntity userEntity, String couponCode) {
         final CouponEntity couponEntity = couponRepository.findByCouponCode(couponCode);
         if (couponEntity != null && checkDate(couponEntity.getValidFrom(), couponEntity.getValidUntil())) {
@@ -33,12 +45,22 @@ public class CouponManager {
         return null;
     }
 
+    /**
+     * Removes coupon from current order of user.
+     * @param user user
+     */
     public void deleteCoupon(UserEntity user) {
         final OrderEntity orderEntity = orderManager.getOrder(user);
         orderEntity.setCouponEntity(null);
         orderManager.saveOrder(orderEntity);
     }
 
+    /**
+     * Check that date is between FROM and UNTIL.
+     * @param validFrom valid from date
+     * @param validUntil valid until date
+     * @return is valid or not
+     */
     private boolean checkDate(Date validFrom, Date validUntil) {
         Date now = new Date();
         return !(now.after(validFrom) && validUntil != null) || now.before(validUntil);
